@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ControllerOne">
+   <children>
+      <Button layoutX="243.0" layoutY="299.0" mnemonicParsing="false" text="HELLO WORLD" />
+      <TextField fx:id="a" editable="false" layoutX="215.0" layoutY="33.0" />
+      <TextField fx:id="b" editable="false" layoutX="215.0" layoutY="72.0" />
+   </children>
+</AnchorPane>
