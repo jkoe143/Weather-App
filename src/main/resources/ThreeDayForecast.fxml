@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="600.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ThreeDayForecastController">
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+   <center>
+      <VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="500.0" prefWidth="450.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <Label alignment="CENTER" graphicTextGap="0.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="58.0" style="-fx-border-color: black; -fx-padding: 12;" text="3-Day Forecast" textAlignment="CENTER" BorderPane.alignment="CENTER">
+            <font>
+               <Font size="18.0" />
+            </font></Label>
+
+         <fx:include fx:id="forecastDay1" source="TableCellForecast.fxml" />
+         <fx:include fx:id="forecastDay2" source="TableCellForecast.fxml" />
+         <fx:include fx:id="forecastDay3" source="TableCellForecast.fxml" />
+
+         <Button fx:id="backButton" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onAction="#handleBackButton" style="-fx-padding: 10;" text="Back to Today's Weather" BorderPane.alignment="CENTER">
+            <font>
+               <Font size="16.0" />
+            </font></Button>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </VBox>
+   </center>
+</BorderPane>
