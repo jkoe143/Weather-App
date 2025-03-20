@@ -90,14 +90,14 @@ public class Today implements WeatherUse {
         LocalDateTime currentTime = LocalDateTime.now();
         DateTimeFormatter formattedTime = DateTimeFormatter.ofPattern("EEEE, M/d");
 
-        heading.setText("\uD83C\uDF26 Today's Weather, " + formattedTime.format(currentTime) + " (" + myWeatherAPI.city + ", " + myWeatherAPI.state + ")");
-        temperature.setText("\uD83C\uDF21 Temp: " + forecast.get(0).temperature + "°F");
+        heading.setText("Today's Weather, " + formattedTime.format(currentTime) + " (" + myWeatherAPI.city + ", " + myWeatherAPI.state + ")");
+        temperature.setText(" Temp: " + forecast.get(0).temperature + "°F");
         weather.setText(forecast.get(0).shortForecast + "!");
-        wind.setText("\uD83D\uDCA8 Wind: " + forecast.get(0).windSpeed + "(" + forecast.get(0).windDirection + ")");
+        wind.setText("Wind: " + forecast.get(0).windSpeed + "(" + forecast.get(0).windDirection + ")");
 
         buttonF.setOnAction(e -> {
             int tempFahrenheit = forecast.get(0).temperature;
-            temperature.setText("\uD83C\uDF21 Temp: " + tempFahrenheit + "°F");
+            temperature.setText("Temp: " + tempFahrenheit + "°F");
             buttonF.setDisable(true);
             buttonC.setDisable(false);
 
@@ -117,7 +117,7 @@ public class Today implements WeatherUse {
 
         buttonC.setOnAction(e -> {
             int tempCelsius = (int) ((forecast.get(0).temperature - 32) * (5.0 / 9.0));
-            temperature.setText("\uD83C\uDF21 Temp: " + tempCelsius + "°C");
+            temperature.setText("Temp: " + tempCelsius + "°C");
             temperature.deselect();
             buttonC.setDisable(true);
             buttonF.setDisable(false);
@@ -224,7 +224,6 @@ public class Today implements WeatherUse {
 
         BorderPane root = new BorderPane(vbox1);
 
-        // ** TEMPORARY: ONLY FOR TESTING PURPOSES **
 
         var buttonMap = new Button("Map");
         buttonMap.setOnAction(this::onButtonMapClick);
@@ -234,10 +233,7 @@ public class Today implements WeatherUse {
 
         var aaa = new HBox(buttonMap);
         root.setTop(aaa);
-
-
-
-        // ^^ DELETE BEFORE TURNING IN ^^
+        
 
         root.setStyle("-fx-background-color: white;");
         vbox1.setPadding(new Insets(20));
