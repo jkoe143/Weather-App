@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -20,6 +21,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.stage.Stage;
 import api.MyWeatherAPI;
+import utils.ForecastIconMatcher;
 import utils.WeatherUse;
 import weather.Period;
 
@@ -67,15 +69,13 @@ public class Today implements WeatherUse {
         heading.setEditable(false);
         wind.setEditable(false);
 
-        Font titleFont = Font.font("Regular", 18);
-
-        heading.setFont(Font.font("Regular", 18));
-        temperature.setFont(Font.font("Regular", 16));
-        weather.setFont(Font.font("Regular", 14));
-        wind.setFont(Font.font("Regular", 14));
-        buttonF.setFont(Font.font("Regular", 14));
-        buttonC.setFont(Font.font("Regular", 14));
-        scene2Button.setFont(Font.font("Regular", 14));
+        heading.setFont(Font.font("Lucida Sans Unicode", 18));
+        temperature.setFont(Font.font("Lucida Sans Unicode", 16));
+        weather.setFont(Font.font("Lucida Sans Unicode", 15));
+        wind.setFont(Font.font("Lucida Sans Unicode", 14));
+        buttonF.setFont(Font.font("Lucida Sans Unicode", 14));
+        buttonC.setFont(Font.font("Lucida Sans Unicode", 14));
+        scene2Button.setFont(Font.font("Lucida Sans Unicode", 16));
 
         heading.setPrefSize(500, 50);
         temperature.setPrefSize(115, 50);
@@ -90,7 +90,7 @@ public class Today implements WeatherUse {
         LocalDateTime currentTime = LocalDateTime.now();
         DateTimeFormatter formattedTime = DateTimeFormatter.ofPattern("EEEE, M/d");
 
-        heading.setText("\uD83C\uDF26 Today's Weather, " + formattedTime.format(currentTime));
+        heading.setText("\uD83C\uDF26 Today's Weather, " + formattedTime.format(currentTime) + " (" + myWeatherAPI.city + ", " + myWeatherAPI.state + ")");
         temperature.setText("\uD83C\uDF21 Temp: " + forecast.get(0).temperature + "°F");
         weather.setText(forecast.get(0).shortForecast + "!");
         wind.setText("\uD83D\uDCA8 Wind: " + forecast.get(0).windSpeed + "(" + forecast.get(0).windDirection + ")");
@@ -108,7 +108,7 @@ public class Today implements WeatherUse {
                 tempField.setText(hourlyTempFahrenheit + "°F");
 
                 tempField.setEditable(false);
-                tempField.setFont(Font.font("Regular", FontPosture.REGULAR, 14));
+                tempField.setFont(Font.font("Lucida Sans Unicode", FontPosture.REGULAR, 14));
                 tempField.setStyle("-fx-text-fill: black; -fx-border-width: 1px;");
                 tempField.setPrefSize(100, 50);
                 tempField.setAlignment(javafx.geometry.Pos.CENTER);
@@ -129,7 +129,7 @@ public class Today implements WeatherUse {
                 tempField.setText(hourlyTempCelsius + "°C");
 
                 tempField.setEditable(false);
-                tempField.setFont(Font.font("Regular", FontPosture.REGULAR, 14));
+                tempField.setFont(Font.font("Lucida Sans Unicode", FontPosture.REGULAR, 14));
                 tempField.setStyle("-fx-text-fill: black; -fx-border-width: 1px;");
                 tempField.setPrefSize(100, 50);
                 tempField.setAlignment(javafx.geometry.Pos.CENTER);
@@ -148,7 +148,7 @@ public class Today implements WeatherUse {
 
             TextField hourField = new TextField(formattedHour);
             hourField.setEditable(false);
-            hourField.setFont(Font.font("Regular",  14));
+            hourField.setFont(Font.font("Lucida Sans Unicode",  14));
             hourField.setStyle("-fx-text-fill: black; -fx-border-width: 1px; -fx-padding: 2;");
             hourField.setPrefSize(100, 30);
             hourField.setAlignment(javafx.geometry.Pos.CENTER);
@@ -156,17 +156,18 @@ public class Today implements WeatherUse {
             TextField tempField = new TextField();
             tempField.setText(hourlyForecast.get(i).temperature + "°F");
             tempField.setEditable(false);
-            tempField.setFont(Font.font("Regular", 14));
+            tempField.setFont(Font.font("Lucida Sans Unicode", 14));
             tempField.setStyle("-fx-text-fill: black; -fx-border-width: 1px; -fx-padding: 2;");
             tempField.setPrefSize(100, 50);
             tempField.setAlignment(javafx.geometry.Pos.CENTER);
 
-            String iconURL = hourlyForecast.get(i).icon;
-            Image iconImage = new Image(iconURL);
+            String iconURL = ForecastIconMatcher.matchShortForecastToIcon(hourlyForecast.get(i).shortForecast, hourlyForecast.get(i).isDaytime);
+            Image iconImage = new Image("./icons/" + iconURL, true);
             ImageView viewIcon = new ImageView(iconImage);
             viewIcon.setFitWidth(27);
             viewIcon.setFitHeight(27);
             viewIcon.setPreserveRatio(true);
+            viewIcon.setBlendMode(BlendMode.DIFFERENCE);
 
             HBox iconContainer = new HBox(viewIcon);
             iconContainer.setAlignment(javafx.geometry.Pos.CENTER);
@@ -180,19 +181,20 @@ public class Today implements WeatherUse {
 
         TextField hourlyLabel = new TextField("\uD83D\uDD50 Hourly Forecast:");
         hourlyLabel.setEditable(false);
-        hourlyLabel.setFont(titleFont);
+        hourlyLabel.setFont(Font.font("Lucida Sans Unicode", 18));
         hourlyLabel.setStyle("-fx-text-fill: black; -fx-border-color: black; -fx-border-width: 1px; -fx-padding: 12;");
         hourlyLabel.setAlignment(javafx.geometry.Pos.CENTER);
         hourlyLabel.setPrefSize(200, 50);
 
         hourlyLabelBox = new HBox(hourlyLabel);
 
-        String iconURL = forecast.get(0).icon;
-        Image iconImage = new Image(iconURL);
+        String iconURL = ForecastIconMatcher.matchShortForecastToIcon(forecast.get(0).shortForecast, forecast.get(0).isDaytime);
+        Image iconImage = new Image("./icons/" + iconURL, true);
         ImageView iconView = new ImageView(iconImage);
         iconView.setFitWidth(27);
         iconView.setFitHeight(28);
         iconView.setPreserveRatio(true);
+        iconView.setBlendMode(BlendMode.DIFFERENCE);
 
         iconHBox = new HBox(iconView);
         iconHBox.setAlignment(javafx.geometry.Pos.CENTER);
@@ -204,16 +206,19 @@ public class Today implements WeatherUse {
         HBox.setHgrow(temperature, Priority.ALWAYS);
         HBox.setHgrow(weather, Priority.ALWAYS);
         HBox.setHgrow(wind, Priority.ALWAYS);
-        vbox1 = new VBox(15, heading, myButtons, hbox1, hourlyLabelBox, hourlyHBox, scene2Button);
+        HBox scene2ButtonWrapper = new HBox(scene2Button);
+        scene2Button.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(scene2Button, Priority.ALWAYS);
+        vbox1 = new VBox(15, heading, myButtons, hbox1, hourlyLabelBox, hourlyHBox, scene2ButtonWrapper);
 
 
         heading.setStyle("-fx-text-fill: black; -fx-border-color: black; -fx-border-width: 1px; -fx-padding: 12;");
         temperature.setStyle(" -fx-text-fill: black; -fx-border-color: black; -fx-border-width: 1px; -fx-padding: 12;");
         weather.setStyle("-fx-text-fill: black; -fx-border-color: black; -fx-border-width: 1px; -fx-padding: 12;");
         wind.setStyle("-fx-text-fill: black; -fx-border-color: black; -fx-border-width: 1px; -fx-padding: 12;");
-        buttonF.setStyle("-fx-background-color: #89cee6; -fx-text-fill: black; -fx-border-color: #0fc6e8; -fx-border-width: 1.5px; -fx-padding: 10;");
-        buttonC.setStyle("-fx-background-color: #89cee6; -fx-text-fill: black; -fx-border-color: #0fc6e8; -fx-border-width: 1.5px; -fx-padding: 10;");
-        scene2Button.setStyle("-fx-background-color: #89cee6; -fx-text-fill: black; -fx-border-color: #0fc6e8; -fx-border-width: 1.5px; -fx-padding: 10;");
+        buttonF.setStyle("-fx-background-color: #89cee6; -fx-text-fill: black; -fx-border-color: black; -fx-border-width: 1px; -fx-padding: 10;");
+        buttonC.setStyle("-fx-background-color: #89cee6; -fx-text-fill: black; -fx-border-color: black; -fx-border-width: 1px; -fx-padding: 10;");
+        scene2Button.setStyle("-fx-background-color: #89cee6; -fx-text-fill: black; -fx-border-width: 1px; -fx-padding: 10;");
 
         scene2Button.setOnAction(this::onThreeDayForecastButtonClick);
 
@@ -223,11 +228,11 @@ public class Today implements WeatherUse {
 
         var buttonMap = new Button("Map");
         buttonMap.setOnAction(this::onButtonMapClick);
+        buttonMap.setStyle("-fx-background-color: #89cee6; -fx-text-fill: black; -fx-border-color: black; -fx-border-width: 1px; -fx-padding: 10;");
+        buttonMap.setFont(Font.font("Lucida Sans Unicode", 14));
 
-        var labelLat = new Label("City: " + myWeatherAPI.city);
-        var labelLon = new Label("State: " + myWeatherAPI.state);
 
-        var aaa = new HBox(buttonMap, labelLat, labelLon);
+        var aaa = new HBox(buttonMap);
         root.setTop(aaa);
 
 

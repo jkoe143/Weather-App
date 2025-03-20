@@ -11,11 +11,11 @@
         <VBox fx:id="dateVBox" alignment="CENTER" prefWidth="55.0">
             <Label fx:id="day" style="-fx-font-weight: bold;" text="Mon">
          <font>
-            <Font size="16.0" />
+            <Font name="Lucida Sans Unicode" size="17.0" />
          </font></Label>
             <Label fx:id="date" text="03/12">
          <font>
-            <Font size="11.0" />
+            <Font name="Lucida Sans Unicode" size="13.0" />
          </font></Label>
         </VBox>
 
@@ -24,12 +24,12 @@
     <HBox alignment="BOTTOM_RIGHT" maxHeight="-Infinity" prefHeight="12.0">
         <Label fx:id="dayTemperature" style="-fx-font-weight: bold;" text="108°">
             <font>
-                <Font size="14.0" />
+                <Font name="Lucida Sans Unicode" size="15.0" />
             </font>
         </Label>
         <Label fx:id="nightTemperature" text="108°" textFill="#656565">
             <font>
-                <Font size="11.0" />
+                <Font name="Lucida Sans Unicode" size="12.0" />
             </font>
         </Label>
     </HBox>
@@ -41,15 +41,27 @@
           <ImageView fx:id="dayIcon" blendMode="DIFFERENCE" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
               <Image url="@icons/Sunny.png" />
           </ImageView>
-          <Label fx:id="forecastDay" text="Wind: 2mph" />
-         <Label fx:id="WindDirectionDay" layoutX="40.0" layoutY="15.0" opacity="0.8" style="-fx-font-weight: 600;" text="SE" />
+          <Label fx:id="forecastDay" text="Wind: 2mph">
+            <font>
+               <Font name="Lucida Sans Unicode" size="13.0" />
+            </font></Label>
+         <Label fx:id="WindDirectionDay" layoutX="40.0" layoutY="15.0" opacity="0.8" style="-fx-font-weight: 600;" text="SE">
+            <font>
+               <Font name="Lucida Sans Unicode" size="13.0" />
+            </font></Label>
       </HBox>
       <HBox alignment="CENTER_LEFT" spacing="5.0">
           <ImageView fx:id="nightIcon" blendMode="DIFFERENCE" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
               <Image url="@icons/Clear-Night.png" />
           </ImageView>
-          <Label fx:id="forecastNight" text="Wind: 3mph" />
-          <Label fx:id="WindDirectionNight" layoutX="40.0" layoutY="15.0" opacity="0.8" style="-fx-font-weight: 600;" text="E" />
+          <Label fx:id="forecastNight" text="Wind: 3mph">
+            <font>
+               <Font name="Lucida Sans Unicode" size="13.0" />
+            </font></Label>
+          <Label fx:id="WindDirectionNight" layoutX="40.0" layoutY="15.0" opacity="0.8" style="-fx-font-weight: 600;" text="E">
+            <font>
+               <Font name="Lucida Sans Unicode" size="13.0" />
+            </font></Label>
       </HBox>
         </VBox>
 
@@ -62,12 +74,12 @@
         <HBox alignment="BOTTOM_RIGHT" maxHeight="-Infinity" prefHeight="12.0">
             <Label fx:id="dayPrecipitation" opacity="0.5" text="100%">
                 <font>
-                    <Font size="12.0" />
+                    <Font name="Lucida Sans Unicode" size="14.0" />
                 </font>
             </Label>
             <Label fx:id="nightPrecipitation" opacity="0.35" text="100%">
                 <font>
-                    <Font size="10.0" />
+                    <Font name="Lucida Sans Unicode" size="12.0" />
                 </font>
             </Label>
         </HBox>
