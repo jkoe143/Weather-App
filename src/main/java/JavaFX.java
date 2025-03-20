@@ -1,23 +1,22 @@
 import javafx.application.Application;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-
 import javafx.stage.Stage;
+import api.MyWeatherAPI;
 import scenes.Today;
 
 
 public class JavaFX extends Application {
 
+	private final MyWeatherAPI weatherAPI = new MyWeatherAPI();
+
 	@Override
 	public void start(Stage stage) throws Exception {
-		stage.setTitle("I'm a professional Weather App!");
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("ThreeDayForecast.fxml"));
-		Scene scene = new Scene(fxmlLoader.load());
-
 		Today today = new Today();
 
+		today.setMyWeatherAPI(weatherAPI);
 		today.setScene(stage);
+
+		stage.setTitle("Weather App");
 		stage.show();
 	}
 

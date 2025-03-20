@@ -1,5 +1,6 @@
 package controllers;
 
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -7,8 +8,10 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import api.MyWeatherAPI;
 import scenes.Today;
 import utils.ForecastIconMatcher;
+import utils.WeatherUse;
 import weather.Period;
 import weather.WeatherAPI;
 
@@ -19,8 +22,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
 
-public class ThreeDayForecastController implements Initializable {
+public class ThreeDayForecastController implements Initializable, WeatherUse {
 
+    private MyWeatherAPI myWeatherAPI;
 
     @FXML private HBox forecastDay1;
     @FXML private TableCellForecastController forecastDay1Controller;
@@ -35,7 +39,7 @@ public class ThreeDayForecastController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        ArrayList<Period> periods = WeatherAPI.getForecast("LOT", 77, 70);
+        ArrayList<Period> periods = myWeatherAPI.getForecast();
         if (periods == null) throw new RuntimeException("forecast periods is null");
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd");
@@ -146,13 +150,20 @@ public class ThreeDayForecastController implements Initializable {
     public void handleBackButton(ActionEvent actionEvent) {
         try {
             Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+
             Today today = new Today();
 
+            today.setMyWeatherAPI(myWeatherAPI);
             today.setScene(stage);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void setMyWeatherAPI(MyWeatherAPI myWeatherAPI) {
+        this.myWeatherAPI = myWeatherAPI;
     }
 }

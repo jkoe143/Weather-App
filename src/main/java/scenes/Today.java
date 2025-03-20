@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,9 +19,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import javafx.stage.Stage;
-import myWeather.MyWeatherAPI;
+import api.MyWeatherAPI;
+import utils.WeatherUse;
 import weather.Period;
-import weather.WeatherAPI;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -30,7 +31,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class Today {
+public class Today implements WeatherUse {
+
+    private MyWeatherAPI myWeatherAPI;
 
     TextField temperature, weather, heading, wind;
     VBox vbox1;
@@ -40,11 +43,11 @@ public class Today {
     Button scene2Button;
 
     public void setScene(Stage primaryStage) throws Exception {
-        ArrayList<Period> forecast = WeatherAPI.getForecast("LOT", 77, 70);
+        ArrayList<Period> forecast = myWeatherAPI.getForecast();
         if (forecast == null) {
             throw new RuntimeException("Forecast did not load");
         }
-        ArrayList<hourlyPeriod> hourlyForecast = MyWeatherAPI.getHourlyForecast("LOT", 77, 70);
+        ArrayList<hourlyPeriod> hourlyForecast = myWeatherAPI.getHourlyForecast();
         if (hourlyForecast == null) {
             throw new RuntimeException("Hourly forecast did not load");
         }
@@ -212,18 +215,7 @@ public class Today {
         buttonC.setStyle("-fx-background-color: #89cee6; -fx-text-fill: black; -fx-border-color: #0fc6e8; -fx-border-width: 1.5px; -fx-padding: 10;");
         scene2Button.setStyle("-fx-background-color: #89cee6; -fx-text-fill: black; -fx-border-color: #0fc6e8; -fx-border-width: 1.5px; -fx-padding: 10;");
 
-        scene2Button.setOnAction(actionEvent -> {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ThreeDayForecast.fxml"));
-                Scene newScene = new Scene(loader.load());
-
-                Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-
-                stage.setScene(newScene);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        scene2Button.setOnAction(this::onThreeDayForecastButtonClick);
 
         BorderPane root = new BorderPane(vbox1);
 
@@ -231,7 +223,14 @@ public class Today {
 
         var buttonMap = new Button("Map");
         buttonMap.setOnAction(this::onButtonMapClick);
-        root.setTop(buttonMap);
+
+        var labelLat = new Label("City: " + myWeatherAPI.city);
+        var labelLon = new Label("State: " + myWeatherAPI.state);
+
+        var aaa = new HBox(buttonMap, labelLat, labelLon);
+        root.setTop(aaa);
+
+
 
         // ^^ DELETE BEFORE TURNING IN ^^
 
@@ -247,9 +246,47 @@ public class Today {
         vbox1.requestFocus();
     }
 
+    private void onThreeDayForecastButtonClick(ActionEvent event)  {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ThreeDayForecast.fxml"));
+            loader.setControllerFactory(c -> {
+                try {
+                    Object controller = c.getDeclaredConstructor().newInstance();
+                    if (controller instanceof WeatherUse) {
+                        ((WeatherUse)controller).setMyWeatherAPI(myWeatherAPI);
+                    }
+                    return controller;
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+
+            Scene newScene = new Scene(loader.load());
+
+            Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+
+            stage.setScene(newScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Add additional error handling as needed
+        }
+    }
+
     private void onButtonMapClick(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Map.fxml"));
+            loader.setControllerFactory(c -> {
+                try {
+                    Object controller = c.getDeclaredConstructor().newInstance();
+                    if (controller instanceof WeatherUse) {
+                        ((WeatherUse)controller).setMyWeatherAPI(myWeatherAPI);
+                    }
+                    return controller;
+                } catch (Exception ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+
             Scene newScene = new Scene(loader.load());
 
             Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
@@ -258,5 +295,10 @@ public class Today {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void setMyWeatherAPI(MyWeatherAPI myWeatherAPI) {
+        this.myWeatherAPI = myWeatherAPI;
     }
 }
