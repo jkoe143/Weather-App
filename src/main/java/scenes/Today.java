@@ -143,7 +143,7 @@ public class Today implements WeatherUse {
         for (int i = 0; i < 10; i++) {
             Date time = hourlyForecast.get(i).startTime;
             SimpleDateFormat formattedHours = new SimpleDateFormat("ha");
-            formattedHours.setTimeZone(TimeZone.getTimeZone("America/Chicago"));
+            formattedHours.setTimeZone(TimeZone.getTimeZone(myWeatherAPI.getTimezone()));
             String formattedHour = formattedHours.format(time);
 
             TextField hourField = new TextField(formattedHour);

@@ -13,6 +13,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.ArrayList;
 
 public class MyWeatherAPI extends WeatherAPI {
@@ -25,8 +26,9 @@ public class MyWeatherAPI extends WeatherAPI {
 
     public String city = "Cicero";
     public String state = "IL";
+    private String timezone = "America/Chicago";
 
-    public boolean changeLocation(double latitude, double longitude){
+    public void changeLocation(double latitude, double longitude) throws RuntimeException {
 
         latitude = latitude * 10000;
         latitude = Math.round(latitude);
@@ -38,22 +40,23 @@ public class MyWeatherAPI extends WeatherAPI {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.weather.gov/points/" + latitude + "," + longitude))
+                .GET()
+                .timeout(Duration.ofSeconds(10))
                 .build();
-        HttpResponse<String> response = null;
 
+        HttpResponse<String> response;
         try {
-            response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+            response = HttpClient.newHttpClient()
+                    .send(request, HttpResponse.BodyHandlers.ofString());
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Request failed", e);
         }
 
-        if (response != null) System.out.println("API Response: " + response.body());
+        if(response.statusCode() != 200) throw new RuntimeException("Please click on a valid area of the US");
 
         PointResponse r = getPointResponse(response.body());
-        if(r == null){
-            System.err.println("Failed to parse JSon");
-            return false;
-        }
+
+        if(r == null) throw new RuntimeException("Response is null");
 
         this.forecastURL = r.properties.forecast;
         this.hourlyForecastURL = r.properties.forecastHourly;
@@ -61,8 +64,7 @@ public class MyWeatherAPI extends WeatherAPI {
         this.state = r.properties.relativeLocation.properties.state;
         this.latitude = latitude;
         this.longitude = longitude;
-
-        return true;
+        this.timezone = r.properties.timeZone;
     }
 
     public ArrayList<Period> getForecast() {
@@ -122,12 +124,16 @@ public class MyWeatherAPI extends WeatherAPI {
 
     public static PointResponse getPointResponse(String json) {
         ObjectMapper om = new ObjectMapper();
-        PointResponse toRet = null;
+
         try {
-            toRet = om.readValue(json, PointResponse.class);
+            return om.readValue(json, PointResponse.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            return null;
         }
-        return toRet;
+    }
+
+    public String getTimezone() {
+        return timezone;
     }
 }

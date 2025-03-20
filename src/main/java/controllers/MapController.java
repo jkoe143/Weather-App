@@ -41,8 +41,12 @@ public class MapController implements WeatherUse {
         double lat = initialLat - yRatio * totalLat;
 
         System.out.println("lat: " + lat + " lon: " + lon);
+        try {
+            myWeatherAPI.changeLocation(lat, lon);
+        } catch (RuntimeException e) {
 
-        myWeatherAPI.changeLocation(lat, lon);
+            return;
+        }
 
         try {
             Stage stage = (Stage) ((Node)mouseEvent.getSource()).getScene().getWindow();

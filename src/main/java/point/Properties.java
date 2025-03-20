@@ -7,4 +7,5 @@ public class Properties {
     public String forecast;
     public String forecastHourly;
     public RelativeLocation relativeLocation;
+    public String timeZone;
 }
